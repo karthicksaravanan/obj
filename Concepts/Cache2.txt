@@ -1,0 +1,39 @@
+#Primary cache
+	Primary cache is associated with Session and its enabled by default.
+	So we don’t need to configure anything to enable the Primary cache in our application.
+	Since it is associated with Session, primary cache will be available as long as hibernate session is alive.
+	Once the session is closed, all the objects in the cache will be lost.
+
+Important points about Primary cache
+	Primary cache is always associated with “Hibernate Session”
+	Primary cache is enabled by default and we don’t need to do any additional settings to enable it.
+	Primary cache can not be disabled but can be cleared.
+	When we query for an entity , first time it loads from database and it will keep it in the First level cache associated with the Session.
+	If we request the same entity using same session again , then it will be loaded from cache and no database call will be made.
+	If we want to remove a specific entity from primary cache , we can use evict() method.
+	If we want to remove all the objects stored in the primary cache, then we can use clear() method
+
+#Secondary cache in Hibernate
+	Secondary cache is associated with the SessionFactory and hence its available to the entire application.
+	So objects kept in the secondary cache are available across multiple sessions.
+	Once the session factory is closed, secondary cache is cleared.
+
+How secondary cache works ?
+	Whenever we try to load an entity , Hibernate first looks at a primary cache associated with a particular session.
+	If cached entity is found in the primary cache itself then it will be returned.
+	If requested entity is not found in primary cache,then hibernate looks at the second level cache.
+	If requested entity is found in second level cache,then it will be returned.
+	If requested entity is not found in secondary cache then database call is made to get the entity and it will be kept in both primary and secondary cache 
+	and then it will be returned.
+
+How to enable secondary cache ? We just need to follow 3 simple steps to enable secondary cache.
+
+1) Add below configuration setting in hibernate.cfg.xml file
+	< property name=”cache.provider_class” >org.hibernate.cache.EhCacheProvider< /property >
+	< property name=”hibernate.cache.use_second_level_cache” >true< /property > 
+2) Add cache usage setting in hbm file or annotated class as below
+	XML file – < cache usage="read-only" / >
+	Annotated class – @Cache(usage=CacheConcurrencyStrategy.READ_ONLY, region=”employeeCache”)
+3) Create ehcache.xml file to configure the cache region
+
+

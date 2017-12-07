@@ -1,0 +1,50 @@
+Hibernate Cache
+	Caching is a mechanism to store the frequently retrieving data from DB into Cache Memory.
+	The main advantage of using Cache is, it reduces the number of database calls and increases the performance of the application.
+	Cache sits between application and database.
+
+How Application gets data from Cache ?
+	Application first tries to find the data in cache and if requested data is not available in cache then only retrieve it from the DB and also put the same data in 	cache for later use. Img: cache_overview1
+
+Cache in Hibernate
+	One of the most powerful features of hibernate is Caching.
+	Hibernate keeps the objects in the Cache memory to reduce the DB calls thereby increases the performance.
+	Hibernate supports cache at different levels as explained below
+		1)Primary Cache or First level Cache
+		2)Secondary Cache or Second level Cache
+		3)Query Cache
+	Img : cache_overview2
+
+	# Primary Cache
+		1.First level cache also called Primary cache or Session level cache
+		2.Primary cache is associated with the Session object, so all the objects within the hibernate session are kept in Primary cache to avoid multiple DB 		calls but once the session is closed all the cached objects will be lost.
+
+	How to enable/disable Primary cache ?
+		Primary cache is enabled by default and we don’t have any control to disable it.
+		However we can delete the objects from the primary cache or clear the primary cache completely using Hibernate provided methods.
+
+
+	# Secondary Cache
+		Second level cache also called Secondary cache or SessionFactory level cache
+		Secondary cache is associated with the SessionFactory and hence its available to the entire application.
+		So objects kept in the secondary cache is available across multiple sessions.
+
+	How to enable/disable Secondary cache ?
+		Secondary cache is disabled by default and we can enable it anytime using Configuration.
+
+	There are various third party implementation providers for secondary cache and some of them are
+		EH Cache,JBoss Cache,OS Cache,Swarm Cache
+
+	#Query Cache
+		Query cache will cache the results of the query against the object.
+		If we have queries which runs multiple times with the same parameters then Query caching is best to use to avoid multiple DB calls.
+
+	How to enable/disable Query cache ?
+		Query cache is disabled by default and we can enable it using configuration.
+		We just need to set the hibernate.cache.use_query_cache property to true to enable Query cache.
+		Since most queries do not benefit from caching of their results, we need to enable caching for individual queries,
+		 even after enabling query caching overall.
+		To enable results caching for a particular query, we need to call org.hibernate.Query.setCacheable(true).
+		This call allows the query to look for existing cache results or add its results to the cache when it is executed.
+
+		Note:Query cache must be used in conjunction with Secondary cache.
